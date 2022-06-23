@@ -1,0 +1,32 @@
+version: '3'
+services:
+  pgsql:
+    image: postgres:alpine
+    ports:
+      - '5432:5432'
+    container_name: 'pgsql'
+    restart: always
+    volumes:
+      - .docker/dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpassword
+
+  app:
+      build: .
+      volumes:
+           - ./:/app
+      env_file: ./.env
+      container_name: 'app_node'
+      ports:
+        - 3000:3000
+        - 9229:9229
+      depends_on:
+        - pgsql
+
+  adminer:
+    image: adminer
+    container_name: 'adminer'
+    restart: always
+    ports:
+      - 8080:8080
