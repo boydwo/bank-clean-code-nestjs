@@ -1,5 +1,5 @@
-export type CustomerAccountModel = {
-  id: string;
+export type AccountModel = {
+  id?: string;
   name: string;
   email: string;
   document: string;
