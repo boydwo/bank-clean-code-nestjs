@@ -8,4 +8,5 @@ export interface IException {
   internalServerError(data?: IFormatExceptionMessage): void;
   forbidden(data?: IFormatExceptionMessage): void;
   Unauthorized(data?: IFormatExceptionMessage): void;
+  notFound(data: IFormatExceptionMessage): void;
 }
