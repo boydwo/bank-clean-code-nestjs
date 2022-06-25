@@ -1,5 +1,6 @@
 import { CreateAccountUseCases } from 'src/app/usecases/account/createAccount.usecases';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
+import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
 
@@ -7,6 +8,7 @@ interface SutTypes {
   sut: CreateAccountUseCases;
   makeAccountRepository: IAccountRepository;
   makeException: IException;
+  makeLogger: ILogger;
 }
 
 const makeSut = (): SutTypes => {
@@ -24,18 +26,32 @@ const makeSut = (): SutTypes => {
     forbidden: jest.fn(),
     internalServerError: jest.fn(),
     Unauthorized: jest.fn(),
+    notFound: jest.fn(),
   };
 
-  const sut = new CreateAccountUseCases(makeAccountRepository, makeException);
-  return { sut, makeAccountRepository, makeException };
+  const makeLogger: ILogger = {
+    info: jest.fn(),
+    debug: jest.fn(),
+    error: jest.fn(),
+    verbose: jest.fn(),
+    warn: jest.fn(),
+  };
+
+  const sut = new CreateAccountUseCases(
+    makeAccountRepository,
+    makeException,
+    makeLogger,
+  );
+  return { sut, makeAccountRepository, makeException, makeLogger };
 };
 describe('app :: usecases :: account :: CreateAccountUseCases', () => {
   it('should call AccountRepository with correct values', async () => {
-    const { sut, makeAccountRepository } = makeSut();
+    const { sut, makeAccountRepository, makeLogger } = makeSut();
 
     await sut.execute(accountMock);
 
     expect(makeAccountRepository.create).toHaveBeenCalledWith(accountMock);
+    expect(makeLogger.info).toHaveBeenCalled();
   });
   it('should throw if account already exists', async () => {
     const { sut, makeAccountRepository, makeException } = makeSut();
