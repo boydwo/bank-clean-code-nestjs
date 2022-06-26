@@ -1,6 +1,6 @@
 import { roleTransactionsEnum } from '../enum/roleTransactions.enum';
 
-export type TransferAccountsModel = {
+export type TransactionAccountsModel = {
   id?: string;
   account_id: number;
   transaction_id: number;
