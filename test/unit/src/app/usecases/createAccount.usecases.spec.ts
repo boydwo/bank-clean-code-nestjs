@@ -25,7 +25,7 @@ const makeSut = (): SutTypes => {
     badRequest: jest.fn(),
     forbidden: jest.fn(),
     internalServerError: jest.fn(),
-    Unauthorized: jest.fn(),
+    unauthorized: jest.fn(),
     notFound: jest.fn(),
   };
 
@@ -48,9 +48,21 @@ describe('app :: usecases :: account :: CreateAccountUseCases', () => {
   it('should call AccountRepository with correct values', async () => {
     const { sut, makeAccountRepository, makeLogger } = makeSut();
 
-    await sut.execute(accountMock);
+    await sut.execute(
+      accountMock.name,
+      accountMock.document,
+      accountMock.email,
+      accountMock.telephone,
+      accountMock.address,
+    );
 
-    expect(makeAccountRepository.create).toHaveBeenCalledWith(accountMock);
+    expect(makeAccountRepository.create).toHaveBeenCalledWith(
+      'John Doe',
+      '9999999999',
+      'johnDoe',
+      '55319999999',
+      'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
+    );
     expect(makeLogger.info).toHaveBeenCalled();
   });
   it('should throw if account already exists', async () => {
@@ -59,7 +71,13 @@ describe('app :: usecases :: account :: CreateAccountUseCases', () => {
       .spyOn(makeAccountRepository, 'findByDocument')
       .mockReturnValueOnce(Promise.resolve(accountMock));
 
-    await sut.execute(accountMock);
+    await sut.execute(
+      accountMock.name,
+      accountMock.document,
+      accountMock.email,
+      accountMock.telephone,
+      accountMock.address,
+    );
 
     expect(makeException.badRequest).toHaveBeenCalledWith({
       message: 'Account already exists!',

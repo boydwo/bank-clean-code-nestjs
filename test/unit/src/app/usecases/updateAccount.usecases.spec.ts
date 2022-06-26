@@ -27,7 +27,7 @@ const makeSut = (): SutTypes => {
     badRequest: jest.fn(),
     forbidden: jest.fn(),
     internalServerError: jest.fn(),
-    Unauthorized: jest.fn(),
+    unauthorized: jest.fn(),
     notFound: jest.fn(),
   };
 

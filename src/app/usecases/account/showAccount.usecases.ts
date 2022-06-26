@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common';
 import { AccountModel } from 'src/domain/models/account.model';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 
-@Injectable()
 export class ShowAccountUseCases {
   constructor(
     private readonly accountRepository: IAccountRepository,

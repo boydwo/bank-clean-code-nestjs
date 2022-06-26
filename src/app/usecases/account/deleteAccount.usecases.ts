@@ -1,8 +1,6 @@
-import { Injectable } from '@nestjs/common';
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 
-@Injectable()
 export class DeleteAccountUseCases {
   constructor(
     private readonly accountRepository: IAccountRepository,

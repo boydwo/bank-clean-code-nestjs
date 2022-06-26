@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { AccountModel } from 'src/domain/models/account.model';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
@@ -11,7 +10,6 @@ type IDataAccount = {
   address?: string;
 };
 
-@Injectable()
 export class UpdateAccountUseCases {
   constructor(
     private readonly accountRepository: IAccountRepository,
