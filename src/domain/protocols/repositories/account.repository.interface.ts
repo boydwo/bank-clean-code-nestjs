@@ -1,7 +1,13 @@
 import { AccountModel } from '../../models/account.model';
 
 export interface IAccountRepository {
-  create(account: AccountModel): Promise<AccountModel>;
+  create(
+    name: string,
+    document: string,
+    email: string,
+    telephone: string,
+    address: string,
+  ): Promise<AccountModel>;
   findAll(): Promise<AccountModel[]>;
   findById(id: number): Promise<AccountModel>;
   findByDocument(document: string): Promise<AccountModel>;
