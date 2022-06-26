@@ -5,6 +5,6 @@ export interface IAccountRepository {
   findAll(): Promise<AccountModel[]>;
   findById(id: number): Promise<AccountModel>;
   findByDocument(document: string): Promise<AccountModel>;
-  update(id: number, account: AccountModel): Promise<void>;
+  update(id: number, account: any): Promise<AccountModel>;
   deleteById(id: number): Promise<void>;
 }
