@@ -7,8 +7,8 @@ import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { ITransactionRepository } from 'src/domain/protocols/repositories/transaction.repository.interface';
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
-import { IStatementResponse } from 'src/domain/protocols/usecases/response/response.usecases.interface';
-import { ITransferBetweenAccountsUsecases } from 'src/domain/protocols/usecases/transferBetweenAccounts.usecases.interface';
+import { IStatementResponse } from 'src/domain/protocols/usecases/transaction/response/response.usecases.interface';
+import { ITransferBetweenAccountsUsecases } from 'src/domain/protocols/usecases/transaction/transferBetweenAccounts.usecases.interface';
 
 export class TransferBetweenAccountsUsecases
   implements ITransferBetweenAccountsUsecases

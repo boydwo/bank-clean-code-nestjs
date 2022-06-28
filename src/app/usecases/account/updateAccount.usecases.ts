@@ -2,22 +2,19 @@ import { AccountModel } from 'src/domain/models/account.model';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
+import {
+  dataUpdateAccount,
+  IUpdateAccountUsecases
+} from 'src/domain/protocols/usecases/account/updateAccount.usecases.interface';
 
-type IDataAccount = {
-  name?: string;
-  email?: string;
-  telephone?: string;
-  address?: string;
-};
-
-export class UpdateAccountUseCases {
+export class UpdateAccountUseCases implements IUpdateAccountUsecases {
   constructor(
     private readonly accountRepository: IAccountRepository,
     private readonly exception: IException,
     private readonly logger: ILogger,
   ) {}
 
-  async execute(id: number, account: IDataAccount): Promise<AccountModel> {
+  async execute(id: number, account: dataUpdateAccount): Promise<AccountModel> {
     const existsAccount = await this.accountRepository.findById(id);
 
     if (!existsAccount) {

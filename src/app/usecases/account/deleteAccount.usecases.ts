@@ -1,7 +1,8 @@
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
+import { IDeleteAccountUsecases } from 'src/domain/protocols/usecases/account/deleteAccount.usecases.interface';
 
-export class DeleteAccountUseCases {
+export class DeleteAccountUseCases implements IDeleteAccountUsecases {
   constructor(
     private readonly accountRepository: IAccountRepository,
     private readonly logger: ILogger,

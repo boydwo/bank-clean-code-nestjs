@@ -2,7 +2,7 @@ import { AccountModel } from 'src/domain/models/account.model';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
-import { ICreateAccountUsecases } from 'src/domain/protocols/usecases/createAccount.usecases.interface';
+import { ICreateAccountUsecases } from 'src/domain/protocols/usecases/account/createAccount.usecases.interface';
 
 export class CreateAccountUseCases implements ICreateAccountUsecases {
   constructor(

@@ -5,8 +5,8 @@ import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { ITransactionRepository } from 'src/domain/protocols/repositories/transaction.repository.interface';
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
-import { IMakeDepositAccountUsecases } from 'src/domain/protocols/usecases/makeDepositAccount.usecases.interface';
-import { IStatementResponse } from 'src/domain/protocols/usecases/response/response.usecases.interface';
+import { IMakeDepositAccountUsecases } from 'src/domain/protocols/usecases/transaction/makeDepositAccount.usecases.interface';
+import { IStatementResponse } from 'src/domain/protocols/usecases/transaction/response/response.usecases.interface';
 
 export class MakeDepositAccountUsecases implements IMakeDepositAccountUsecases {
   constructor(
