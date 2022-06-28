@@ -5,10 +5,8 @@ import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { ITransactionRepository } from 'src/domain/protocols/repositories/transaction.repository.interface';
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
-import {
-  IDepositResponse,
-  IMakeDepositAccountUsecases
-} from 'src/domain/protocols/usecases/makeDepositAccount.usecases.interface';
+import { IMakeDepositAccountUsecases } from 'src/domain/protocols/usecases/makeDepositAccount.usecases.interface';
+import { IStatementResponse } from 'src/domain/protocols/usecases/response/response.usecases.interface';
 
 export class MakeDepositAccountUsecases implements IMakeDepositAccountUsecases {
   constructor(
@@ -19,7 +17,10 @@ export class MakeDepositAccountUsecases implements IMakeDepositAccountUsecases {
     private readonly logger: ILogger,
   ) {}
 
-  async execute(account_id: number, value: number): Promise<IDepositResponse> {
+  async execute(
+    account_id: number,
+    value: number,
+  ): Promise<IStatementResponse> {
     const existsAccount = await this.accountRepository.findById(account_id);
 
     if (!existsAccount) {

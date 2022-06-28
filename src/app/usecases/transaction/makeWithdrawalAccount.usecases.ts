@@ -5,10 +5,8 @@ import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { ITransactionRepository } from 'src/domain/protocols/repositories/transaction.repository.interface';
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
-import {
-  IMakeWithdrawalUsecases,
-  IWithdrawalResponse
-} from 'src/domain/protocols/usecases/makeWithdrawalAccount.usecases.interface';
+import { IMakeWithdrawalUsecases } from 'src/domain/protocols/usecases/makeWithdrawalAccount.usecases.interface';
+import { IStatementResponse } from 'src/domain/protocols/usecases/response/response.usecases.interface';
 
 export class MakeWithdrawalAccountUsecases implements IMakeWithdrawalUsecases {
   constructor(
@@ -22,7 +20,7 @@ export class MakeWithdrawalAccountUsecases implements IMakeWithdrawalUsecases {
   async execute(
     account_id: number,
     value: number,
-  ): Promise<IWithdrawalResponse> {
+  ): Promise<IStatementResponse> {
     const existsAccount = await this.accountRepository.findById(account_id);
 
     if (!existsAccount) {
