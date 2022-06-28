@@ -2,6 +2,7 @@ import { DeleteAccountUseCases } from 'src/app/usecases/account/deleteAccount.us
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
+import { makeLoggerMock } from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: DeleteAccountUseCases;
@@ -19,13 +20,7 @@ const makeSut = (): SutTypes => {
     findByDocument: jest.fn().mockReturnValue(null),
   };
 
-  const makeLogger: ILogger = {
-    info: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    verbose: jest.fn(),
-    warn: jest.fn(),
-  };
+  const makeLogger = makeLoggerMock;
   const sut = new DeleteAccountUseCases(makeAccountRepository, makeLogger);
   return { sut, makeAccountRepository, makeLogger };
 };

@@ -21,7 +21,7 @@ export class CreateAccountUseCases implements ICreateAccountUsecases {
     const existsAccount = await this.accountRepository.findByDocument(document);
 
     if (existsAccount) {
-      this.exception.badRequest({
+      throw this.exception.badRequest({
         message: 'Account already exists!',
       });
     }

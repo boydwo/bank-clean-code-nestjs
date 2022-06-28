@@ -12,7 +12,7 @@ export class ShowAccountUseCases {
     const existsAccount = await this.accountRepository.findById(id);
 
     if (!existsAccount) {
-      this.exception.notFound({
+      throw this.exception.notFound({
         message: 'Account not found!',
       });
     }

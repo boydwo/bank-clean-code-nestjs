@@ -2,6 +2,7 @@ import { ShowAccountUseCases } from 'src/app/usecases/account/showAccount.usecas
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
+import { makeExceptionMock } from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: ShowAccountUseCases;
@@ -19,14 +20,7 @@ const makeSut = (): SutTypes => {
     findByDocument: jest.fn().mockReturnValue(null),
   };
 
-  const makeException: IException = {
-    badRequest: jest.fn(),
-    forbidden: jest.fn(),
-    internalServerError: jest.fn(),
-    unauthorized: jest.fn(),
-    notFound: jest.fn(),
-  };
-
+  const makeException = makeExceptionMock;
   const sut = new ShowAccountUseCases(makeAccountRepository, makeException);
   return { sut, makeAccountRepository, makeException };
 };
@@ -38,16 +32,34 @@ describe('app :: usecases :: account :: ShowAccountUseCases', () => {
 
     expect(makeAccountRepository.findById).toHaveBeenCalledWith(1);
   });
-  it('should throw if account already exists', async () => {
+  it('should returncorrect values', async () => {
+    const { sut } = makeSut();
+
+    const response = await sut.execute(1);
+
+    expect(response).toEqual({
+      email: 'johnDoe',
+      id: 1,
+      address: 'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
+      balance: 20,
+      document: '9999999999',
+      name: 'John Doe',
+      telephone: '55319999999',
+    });
+  });
+  it('should throw if account not found', async () => {
     const { sut, makeAccountRepository, makeException } = makeSut();
     jest
       .spyOn(makeAccountRepository, 'findById')
       .mockReturnValueOnce(Promise.resolve(null));
 
-    await sut.execute(1);
-
-    expect(makeException.notFound).toHaveBeenCalledWith({
-      message: 'Account not found!',
-    });
+    try {
+      await sut.execute(1);
+    } catch (error) {
+      expect(makeException.notFound).toHaveBeenCalledWith({
+        message: 'Account not found!',
+      });
+      expect(error).toBeInstanceOf(Error);
+    }
   });
 });

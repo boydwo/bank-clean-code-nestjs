@@ -3,6 +3,10 @@ import { IException } from 'src/domain/protocols/exceptions/exceptions.interface
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
+import {
+  makeExceptionMock,
+  makeLoggerMock
+} from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: CreateAccountUseCases;
@@ -21,21 +25,8 @@ const makeSut = (): SutTypes => {
     findByDocument: jest.fn().mockReturnValue(null),
   };
 
-  const makeException: IException = {
-    badRequest: jest.fn(),
-    forbidden: jest.fn(),
-    internalServerError: jest.fn(),
-    unauthorized: jest.fn(),
-    notFound: jest.fn(),
-  };
-
-  const makeLogger: ILogger = {
-    info: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    verbose: jest.fn(),
-    warn: jest.fn(),
-  };
+  const makeException = makeExceptionMock;
+  const makeLogger = makeLoggerMock;
 
   const sut = new CreateAccountUseCases(
     makeAccountRepository,
@@ -63,13 +54,10 @@ describe('app :: usecases :: account :: CreateAccountUseCases', () => {
       '55319999999',
       'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
     );
-    expect(makeLogger.info).toHaveBeenCalled();
   });
-  it('should throw if account already exists', async () => {
-    const { sut, makeAccountRepository, makeException } = makeSut();
-    jest
-      .spyOn(makeAccountRepository, 'findByDocument')
-      .mockReturnValueOnce(Promise.resolve(accountMock));
+
+  it('should call Logger with correct values', async () => {
+    const { sut, makeLogger } = makeSut();
 
     await sut.execute(
       accountMock.name,
@@ -79,8 +67,30 @@ describe('app :: usecases :: account :: CreateAccountUseCases', () => {
       accountMock.address,
     );
 
-    expect(makeException.badRequest).toHaveBeenCalledWith({
-      message: 'Account already exists!',
-    });
+    expect(makeLogger.info).toHaveBeenCalledWith(
+      'createAccountUseCases.execute',
+      'Account John Doe created successfully',
+    );
+  });
+  it('should throw if account already exists', async () => {
+    const { sut, makeAccountRepository, makeException } = makeSut();
+    jest
+      .spyOn(makeAccountRepository, 'findByDocument')
+      .mockReturnValueOnce(Promise.resolve(accountMock));
+
+    try {
+      await sut.execute(
+        accountMock.name,
+        accountMock.document,
+        accountMock.email,
+        accountMock.telephone,
+        accountMock.address,
+      );
+    } catch (error) {
+      expect(makeException.badRequest).toHaveBeenCalledWith({
+        message: 'Account already exists!',
+      });
+      expect(error).toBeInstanceOf(Error);
+    }
   });
 });

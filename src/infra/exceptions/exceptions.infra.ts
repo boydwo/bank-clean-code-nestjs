@@ -11,19 +11,19 @@ import {
 } from 'src/domain/protocols/exceptions/exceptions.interface';
 
 export class ExceptionsService implements IException {
-  badRequest(data: IFormatExceptionMessage): void {
-    throw new BadRequestException(data);
+  badRequest(data: IFormatExceptionMessage): Error {
+    return new BadRequestException(data);
   }
-  internalServerError(data?: IFormatExceptionMessage): void {
-    throw new InternalServerErrorException(data);
+  internalServerError(data?: IFormatExceptionMessage): Error {
+    return new InternalServerErrorException(data);
   }
-  forbidden(data?: IFormatExceptionMessage): void {
-    throw new ForbiddenException(data);
+  forbidden(data?: IFormatExceptionMessage): Error {
+    return new ForbiddenException(data);
   }
-  unauthorized(data?: IFormatExceptionMessage): void {
-    throw new UnauthorizedException(data);
+  unauthorized(data?: IFormatExceptionMessage): Error {
+    return new UnauthorizedException(data);
   }
-  notFound(data?: IFormatExceptionMessage): void {
-    throw new NotFoundException(data);
+  notFound(data?: IFormatExceptionMessage): Error {
+    return new NotFoundException(data);
   }
 }

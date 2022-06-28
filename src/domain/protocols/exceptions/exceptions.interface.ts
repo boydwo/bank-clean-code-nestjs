@@ -4,9 +4,9 @@ export interface IFormatExceptionMessage {
 }
 
 export interface IException {
-  badRequest(data: IFormatExceptionMessage): void;
-  internalServerError(data?: IFormatExceptionMessage): void;
-  forbidden(data?: IFormatExceptionMessage): void;
-  unauthorized(data?: IFormatExceptionMessage): void;
-  notFound(data: IFormatExceptionMessage): void;
+  badRequest(data: IFormatExceptionMessage): Error;
+  internalServerError(data?: IFormatExceptionMessage): Error;
+  forbidden(data?: IFormatExceptionMessage): Error;
+  unauthorized(data?: IFormatExceptionMessage): Error;
+  notFound(data: IFormatExceptionMessage): Error;
 }

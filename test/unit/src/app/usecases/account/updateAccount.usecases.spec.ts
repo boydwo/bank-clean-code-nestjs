@@ -3,6 +3,10 @@ import { IException } from 'src/domain/protocols/exceptions/exceptions.interface
 import { ILogger } from 'src/domain/protocols/logger/logger.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
+import {
+  makeExceptionMock,
+  makeLoggerMock
+} from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: UpdateAccountUseCases;
@@ -23,22 +27,8 @@ const makeSut = (): SutTypes => {
     findByDocument: jest.fn().mockReturnValue(null),
   };
 
-  const makeException: IException = {
-    badRequest: jest.fn(),
-    forbidden: jest.fn(),
-    internalServerError: jest.fn(),
-    unauthorized: jest.fn(),
-    notFound: jest.fn(),
-  };
-
-  const makeLogger: ILogger = {
-    info: jest.fn(),
-    debug: jest.fn(),
-    error: jest.fn(),
-    verbose: jest.fn(),
-    warn: jest.fn(),
-  };
-
+  const makeException = makeExceptionMock;
+  const makeLogger = makeLoggerMock;
   const sut = new UpdateAccountUseCases(
     makeAccountRepository,
     makeException,
@@ -73,10 +63,13 @@ describe('app :: usecases :: account :: UpdateAccountUseCases', () => {
       .spyOn(makeAccountRepository, 'findById')
       .mockReturnValueOnce(Promise.resolve(null));
 
-    await sut.execute(1, updateAccount);
-
-    expect(makeException.notFound).toHaveBeenCalledWith({
-      message: 'Account not found!',
-    });
+    try {
+      await sut.execute(1, updateAccount);
+    } catch (error) {
+      expect(makeException.notFound).toHaveBeenCalledWith({
+        message: 'Account not found!',
+      });
+      expect(error).toBeInstanceOf(Error);
+    }
   });
 });
