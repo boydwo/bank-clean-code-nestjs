@@ -1,11 +1,12 @@
-import { GetBalanceAccountUsecases } from 'src/app/usecases/transaction/getBalanceAccount.usecases';
+import { GetStatementAccountUsecases } from 'src/app/usecases/transaction/getStatementAccount.usecases';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
+import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
 import { makeExceptionMock } from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
-  sut: GetBalanceAccountUsecases;
+  sut: GetStatementAccountUsecases;
   makeAccountRepository: IAccountRepository;
   makeException: IException;
 }
@@ -20,14 +21,21 @@ const makeSut = (): SutTypes => {
     findByDocument: jest.fn().mockReturnValue(null),
   };
 
+  const transactionAccountRepository: ITransactionAccountRepository = {
+    create: jest.fn(),
+    findAll: jest.fn(),
+    findAllWithTransaction: jest.fn(),
+    findAllByAccountId: jest.fn(),
+  };
   const makeException = makeExceptionMock;
-  const sut = new GetBalanceAccountUsecases(
+  const sut = new GetStatementAccountUsecases(
     makeAccountRepository,
+    transactionAccountRepository,
     makeException,
   );
   return { sut, makeAccountRepository, makeException };
 };
-describe('app :: usecases :: transaction :: GetBalanceAccountUsecases', () => {
+describe('app :: usecases :: transaction :: GetStatementAccountUsecases', () => {
   it('should call AccountRepository with correct values', async () => {
     const { sut, makeAccountRepository } = makeSut();
 
