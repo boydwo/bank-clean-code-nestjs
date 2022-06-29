@@ -11,5 +11,7 @@ export interface ITransactionAccountRepository {
     after_balance: number,
   ): Promise<TransactionAccountsModel>;
   findAll(): Promise<TransactionAccountsModel[]>;
-  findAllByAccountId(account_id: number): Promise<TransactionAccountsModel[]>;
+  findAllByAccountIdWithTransactionAndAccounts(
+    account_id: number,
+  ): Promise<TransactionAccountsModel[]>;
 }

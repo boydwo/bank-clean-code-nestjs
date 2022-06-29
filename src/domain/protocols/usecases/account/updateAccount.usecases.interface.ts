@@ -5,6 +5,7 @@ export type dataUpdateAccount = {
   email?: string;
   telephone?: string;
   address?: string;
+  balance?: number;
 };
 
 export interface IUpdateAccountUsecases {
