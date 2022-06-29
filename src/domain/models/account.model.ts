@@ -1,4 +1,4 @@
-import { TransactionModel } from './transaction.model';
+import { TransactionAccountsModel } from './transactionAccounts.model';
 
 export type AccountModel = {
   id?: number;
@@ -8,5 +8,5 @@ export type AccountModel = {
   telephone?: string;
   address: string;
   balance: number;
-  transactions?: TransactionModel[];
+  transactions_accounts?: TransactionAccountsModel[];
 };
