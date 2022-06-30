@@ -1,5 +1,6 @@
 import { IDatabaseClient } from 'src/domain/protocols/database/databaseClient.interface';
 import { AccountRepository } from 'src/infra/repositories/account.repository';
+import { makeDatabaseAdapterMock } from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: AccountRepository;
@@ -7,15 +8,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const makeDatabaseAdapter: IDatabaseClient = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findAllWithArgs: jest.fn(),
-    delete: jest.fn(),
-    findBy: jest.fn(),
-    update: jest.fn(),
-  };
-
+  const makeDatabaseAdapter = makeDatabaseAdapterMock;
   const sut = new AccountRepository(makeDatabaseAdapter);
   return { sut, makeDatabaseAdapter };
 };
@@ -27,7 +20,7 @@ describe('app :: infra :: repositories :: AccountRepository', () => {
       document: '9999999999',
       email: 'john@doe.com',
       telephone: '55319999999',
-      address: 'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
+      address: 'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP'
     };
 
     await sut.create(
@@ -35,7 +28,7 @@ describe('app :: infra :: repositories :: AccountRepository', () => {
       '9999999999',
       'john@doe.com',
       '55319999999',
-      'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
+      'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP'
     );
 
     expect(makeDatabaseAdapter.create).toHaveBeenCalledWith(fakeData);
@@ -61,7 +54,7 @@ describe('app :: infra :: repositories :: AccountRepository', () => {
     await sut.findByDocument('9999999999');
 
     expect(makeDatabaseAdapter.findBy).toHaveBeenCalledWith({
-      document: '9999999999',
+      document: '9999999999'
     });
   });
   it('should call update method with correct values', async () => {
@@ -71,7 +64,7 @@ describe('app :: infra :: repositories :: AccountRepository', () => {
       name: 'John Doe',
       address: 'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
       email: 'johnDoe@gmail.com',
-      telephone: '555-555-5555',
+      telephone: '555-555-5555'
     });
 
     expect(makeDatabaseAdapter.update).toHaveBeenCalledWith({
@@ -81,8 +74,8 @@ describe('app :: infra :: repositories :: AccountRepository', () => {
         address:
           'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
         email: 'johnDoe@gmail.com',
-        telephone: '555-555-5555',
-      },
+        telephone: '555-555-5555'
+      }
     });
   });
 

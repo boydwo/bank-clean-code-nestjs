@@ -1,6 +1,7 @@
 import { roleTransactionsEnum } from 'src/domain/enum/roleTransactions.enum';
 import { IDatabaseClient } from 'src/domain/protocols/database/databaseClient.interface';
 import { TransactionAccountRepository } from 'src/infra/repositories/transactionAccounts.repository';
+import { makeDatabaseAdapterMock } from 'test/unit/mocks/factory.mock';
 
 interface SutTypes {
   sut: TransactionAccountRepository;
@@ -8,14 +9,7 @@ interface SutTypes {
 }
 
 const makeSut = (): SutTypes => {
-  const makeDatabaseAdapter: IDatabaseClient = {
-    create: jest.fn(),
-    findAll: jest.fn(),
-    findAllWithArgs: jest.fn(),
-    delete: jest.fn(),
-    findBy: jest.fn(),
-    update: jest.fn()
-  };
+  const makeDatabaseAdapter = makeDatabaseAdapterMock;
 
   const sut = new TransactionAccountRepository(makeDatabaseAdapter);
   return { sut, makeDatabaseAdapter };
@@ -42,7 +36,7 @@ describe('app :: infra :: repositories :: TransactionAccountRepository', () => {
 
     expect(makeDatabaseAdapter.findAll).toHaveBeenCalled();
   });
-  it('should call findById method with correct values', async () => {
+  it('should call findAllByAccountIdWithTransactionAndAccounts method with correct values', async () => {
     const { sut, makeDatabaseAdapter } = makeSut();
 
     await sut.findAllByAccountIdWithTransactionAndAccounts(1);
