@@ -8,5 +8,5 @@ export type AccountModel = {
   telephone?: string;
   address: string;
   balance: number;
-  transactions_accounts?: TransactionAccountsModel[];
+  transaction_accounts?: TransactionAccountsModel[];
 };

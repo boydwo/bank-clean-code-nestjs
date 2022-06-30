@@ -5,6 +5,6 @@ export type TransactionModel = {
   id?: number;
   type: typeTransactionsEnum;
   value: number;
-  created_at: string;
-  transactionAccounts?: TransactionAccountsModel[];
+  createdAt: string;
+  transaction_accounts?: TransactionAccountsModel[];
 };

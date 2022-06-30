@@ -1,4 +1,5 @@
 import { roleTransactionsEnum } from '../enum/roleTransactions.enum';
+import { AccountModel } from './account.model';
 import { TransactionModel } from './transaction.model';
 
 export type TransactionAccountsModel = {
@@ -10,4 +11,5 @@ export type TransactionAccountsModel = {
   value: number;
   before_balance: number;
   after_balance: number;
+  account?: AccountModel;
 };
