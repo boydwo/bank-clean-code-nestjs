@@ -17,6 +17,7 @@
     "prisma:migrate": "prisma migrate dev --skip-seed",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
+    "prisma:migrate:init": "npx prisma migrate dev --name init && npm run start:dev",
     "prisma:generate:watch": "prisma generate --watch",
     "prisma:seed": "prisma db seed --preview-feature",
     "prisma:studio": "prisma studio",
@@ -75,12 +76,14 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/*.(t|j)s",
+      "!src/**/*.module.ts",
+      "!src/main.ts"
     ],
     "testPathIgnorePatterns": [
       "node_modules/"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "./coverage",
     "coverageProvider": "babel",
     "testEnvironment": "node"
   },

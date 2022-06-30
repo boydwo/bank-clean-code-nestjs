@@ -1,28 +1,16 @@
-version: '3'
+version: '3.9'
 services:
   pgsql:
     image: postgres:alpine
     ports:
       - '5432:5432'
     container_name: 'pgsql'
-    restart: always
     volumes:
       - .docker/dbdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpassword
-
-  app:
-      build: .
-      volumes:
-           - ./:/app
-      env_file: ./.env
-      container_name: 'app_node'
-      ports:
-        - 3000:3000
-        - 9229:9229
-      depends_on:
-        - pgsql
+      POSTGRES_DB: ripio
 
   adminer:
     image: adminer
@@ -30,3 +18,19 @@ services:
     restart: always
     ports:
       - 8080:8080
+
+  app:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      volumes:
+           - ./:/app
+      env_file: ./.env
+      environment:
+        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@pgsql:5432/${POSTGRES_DB}?schema=public
+      container_name: 'app_node2'
+      ports:
+        - 3000:3000
+        - 9229:9229
+      depends_on:
+        - pgsql

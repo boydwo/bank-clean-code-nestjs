@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { EnvironmentConfigModule } from './infra/config/environment-config/environment-config.module';
+import { InfraModule } from './infra/_infra.module';
+import { PresentationModule } from './presentation/_presentation.module';
 
 @Module({
-  imports: [EnvironmentConfigModule],
+  imports: [PresentationModule, InfraModule],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}
