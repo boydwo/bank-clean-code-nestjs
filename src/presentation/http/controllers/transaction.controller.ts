@@ -136,7 +136,7 @@ export class TransactionController {
   @ApiNotFoundResponse({
     description: 'Account not found!'
   })
-  async statementAccount(
+  async getStatementAccount(
     @Param('id', ParseIntPipe) account_id: number
   ): Promise<StatementResponseDto[]> {
     const transaction = await this.getStatementAccountUsecases.execute(
