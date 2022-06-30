@@ -1,6 +1,7 @@
 import { AccountModel } from 'src/domain/models/account.model';
 
 export const accountMock: AccountModel = {
+  id: 1,
   name: 'John Doe',
   email: 'johnDoe',
   document: '9999999999',
