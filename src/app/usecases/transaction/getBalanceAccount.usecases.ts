@@ -8,15 +8,15 @@ import {
 export class GetBalanceAccountUsecases implements IGetBalanceAccountUsecases {
   constructor(
     private readonly accountRepository: IAccountRepository,
-    private readonly exception: IException,
+    private readonly exception: IException
   ) {}
 
-  async execute(id: number): Promise<GetBalanceResponse> {
-    const existsAccount = await this.accountRepository.findById(id);
+  async execute(account_id: number): Promise<GetBalanceResponse> {
+    const existsAccount = await this.accountRepository.findById(account_id);
 
     if (!existsAccount) {
       throw this.exception.notFound({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
     }
 
@@ -24,7 +24,7 @@ export class GetBalanceAccountUsecases implements IGetBalanceAccountUsecases {
       id: existsAccount.id,
       name: existsAccount.name,
       balance: existsAccount.balance,
-      message: `${existsAccount.name} you have R$${existsAccount.balance} in your account`,
+      message: `${existsAccount.name} you have R$${existsAccount.balance} in your account`
     };
   }
 }

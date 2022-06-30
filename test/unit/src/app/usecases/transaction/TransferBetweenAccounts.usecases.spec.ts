@@ -11,6 +11,7 @@ import {
   makeExceptionMock,
   makeLoggerMock
 } from 'test/unit/mocks/factory.mock';
+import { transactionAccountDepositMock } from 'test/unit/mocks/transaction.mock';
 
 interface SutTypes {
   sut: TransferBetweenAccountsUsecases;
@@ -31,7 +32,7 @@ const makeSut = (): SutTypes => {
       return { ...accountMock, id: 2 };
     }),
     update: jest.fn(),
-    findByDocument: jest.fn().mockReturnValue(null),
+    findByDocument: jest.fn().mockReturnValue(null)
   };
 
   const makeTransactionRepository: ITransactionRepository = {
@@ -39,15 +40,17 @@ const makeSut = (): SutTypes => {
       id: 1,
       type: typeTransactionsEnum.DEPOSIT,
       value: 20,
-      created_at: new Date(2022, 5, 27),
+      created_at: new Date(2022, 5, 27)
     }),
-    findById: jest.fn(),
+    findById: jest.fn()
   };
 
   const makeTransactionAccountRepository: ITransactionAccountRepository = {
     create: jest.fn().mockReturnValue(accountMock),
     findAll: jest.fn(),
-    findAllByAccountId: jest.fn(),
+    findAllByAccountIdWithTransactionAndAccounts: jest
+      .fn()
+      .mockReturnValue(transactionAccountDepositMock)
   };
 
   const makeException = makeExceptionMock;
@@ -58,7 +61,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   );
   return {
     sut,
@@ -66,7 +69,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   };
 };
 describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
@@ -90,7 +93,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
 
     expect(makeTransactionRepository.create).toHaveBeenCalledWith(
       typeTransactionsEnum.TRANSFER,
-      20,
+      20
     );
   });
   it('should call TransactionAccountRepository 2 times with correct values', async () => {
@@ -105,7 +108,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       roleTransactionsEnum.SUBTRACT,
       20,
       20,
-      0,
+      0
     );
     expect(makeTransactionAccountRepository.create).toHaveBeenCalledWith(
       2,
@@ -113,7 +116,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       roleTransactionsEnum.ADD,
       20,
       20,
-      40,
+      40
     );
   });
   it('should call AccountRepository to update balance account 2 times with correct values', async () => {
@@ -123,10 +126,10 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
 
     expect(makeAccountRepository.update).toHaveBeenCalledTimes(2);
     expect(makeAccountRepository.update).toHaveBeenCalledWith(1, {
-      balance: 0,
+      balance: 0
     });
     expect(makeAccountRepository.update).toHaveBeenCalledWith(2, {
-      balance: 40,
+      balance: 40
     });
   });
   it('should call Logger with correct values', async () => {
@@ -136,7 +139,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
     expect(makeLogger.info).toHaveBeenCalledTimes(1);
     expect(makeLogger.info).toHaveBeenCalledWith(
       'TransferBetweenAccountsUsecases.execute',
-      'Account id:1 transferred R$20 to Account id:2',
+      'Account id:1 transferred R$20 to Account id:2'
     );
   });
   it('should return statement with correct values', async () => {
@@ -152,7 +155,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       before_balance: 20,
       after_balance: 0,
       transaction_id: 1,
-      receiver_account_id: 20,
+      receiver_account_id: 20
     });
   });
 
@@ -163,7 +166,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       await sut.execute(1, 1, 20);
     } catch (error) {
       expect(makeException.badRequest).toHaveBeenCalledWith({
-        message: 'Invalid Transfer Operation!',
+        message: 'Invalid Transfer Operation!'
       });
       expect(makeException.badRequest).toHaveBeenCalledTimes(1);
       expect(error).toBeInstanceOf(Error);
@@ -177,7 +180,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       await sut.execute(1, 2, 20);
     } catch (error) {
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Sender account not found!',
+        message: 'Sender account not found!'
       });
       expect(makeException.notFound).toHaveBeenCalledTimes(1);
       expect(error).toBeInstanceOf(Error);
@@ -194,9 +197,8 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
     try {
       await sut.execute(1, 2, 20);
     } catch (error) {
-      console.log(error);
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Receiver account not found!',
+        message: 'Receiver account not found!'
       });
       expect(makeException.notFound).toHaveBeenCalledTimes(1);
     }
@@ -207,14 +209,14 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
     jest
       .spyOn(makeAccountRepository, 'findById')
       .mockReturnValueOnce(
-        Promise.resolve({ ...accountMock, id: 1, balance: 0 }),
+        Promise.resolve({ ...accountMock, id: 1, balance: 0 })
       );
 
     try {
       await sut.execute(1, 2, 20);
     } catch (error) {
       expect(makeException.badRequest).toHaveBeenCalledWith({
-        message: 'Transaction error! Your balance is insufficient!',
+        message: 'Transaction error! Your balance is insufficient!'
       });
       expect(makeException.badRequest).toHaveBeenCalledTimes(1);
     }

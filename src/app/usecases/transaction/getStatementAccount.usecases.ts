@@ -15,7 +15,7 @@ export class GetStatementAccountUsecases
   constructor(
     private readonly accountRepository: IAccountRepository,
     private readonly transactionAccountRepository: ITransactionAccountRepository,
-    private readonly exception: IException,
+    private readonly exception: IException
   ) {}
 
   async execute(id: number): Promise<GetStatementResponse[]> {
@@ -23,35 +23,41 @@ export class GetStatementAccountUsecases
 
     if (!existsAccount) {
       throw this.exception.notFound({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
     }
 
     const transactions =
       await this.transactionAccountRepository.findAllByAccountIdWithTransactionAndAccounts(
-        id,
+        id
       );
 
     const response = transactions.map(
       ({ transaction, role, account_id, value }) => {
+        const date = new Date(transaction.createdAt);
         const data: GetStatementResponse = {
           account_transaction_id: account_id,
           role,
           type: transaction.type,
           value,
-          created_at: transaction.created_at,
+          created_at: transaction.createdAt,
           transaction_id: transaction.id,
+          message: `You made ${
+            transaction.type
+          } and ${role} R$${value} in your account in ${date.getDate()}-${
+            date.getMonth() + 1
+          }-${date.getFullYear()}`
         };
 
         this.verifyIfTransactionIsTransferBetweenAccounts(
           transaction,
           account_id,
           role,
-          data,
+          data
         );
 
         return data;
-      },
+      }
     );
     return response;
   }
@@ -60,16 +66,18 @@ export class GetStatementAccountUsecases
     transaction: TransactionModel,
     account_id: number,
     role: roleTransactionsEnum,
-    data: GetStatementResponse,
+    data: GetStatementResponse
   ) {
     if (transaction.type === typeTransactionsEnum.TRANSFER) {
-      const otherAccount = transaction.transactionAccounts.find(
-        (trasAcc) => trasAcc.account_id !== account_id,
+      const otherAccount = transaction.transaction_accounts.find(
+        (trasAcc) => trasAcc.account_id !== account_id
       );
 
       if (role === roleTransactionsEnum.SUBTRACT) {
+        data.message = data.message + ` to ${otherAccount.account.name}`;
         data.receiver_account_id = otherAccount.account_id;
       } else {
+        data.message = data.message + ` from ${otherAccount.account.name}`;
         data.sender_account_id = otherAccount.account_id;
       }
     }

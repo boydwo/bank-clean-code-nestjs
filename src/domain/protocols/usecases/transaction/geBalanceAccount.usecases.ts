@@ -6,5 +6,5 @@ export type GetBalanceResponse = {
 };
 
 export interface IGetBalanceAccountUsecases {
-  execute(account_id: number, value: number): Promise<GetBalanceResponse>;
+  execute(account_id: number): Promise<GetBalanceResponse>;
 }

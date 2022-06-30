@@ -4,6 +4,7 @@ import { IAccountRepository } from 'src/domain/protocols/repositories/account.re
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
 import { accountMock } from 'test/unit/mocks/account.mock';
 import { makeExceptionMock } from 'test/unit/mocks/factory.mock';
+import { transactionAccountDepositMock } from 'test/unit/mocks/transaction.mock';
 
 interface SutTypes {
   sut: GetStatementAccountUsecases;
@@ -18,20 +19,21 @@ const makeSut = (): SutTypes => {
     deleteById: jest.fn(),
     findById: jest.fn().mockReturnValue({ ...accountMock, id: 1 }),
     update: jest.fn(),
-    findByDocument: jest.fn().mockReturnValue(null),
+    findByDocument: jest.fn().mockReturnValue(null)
   };
 
   const transactionAccountRepository: ITransactionAccountRepository = {
     create: jest.fn(),
     findAll: jest.fn(),
-    findAllWithTransaction: jest.fn(),
-    findAllByAccountId: jest.fn(),
+    findAllByAccountIdWithTransactionAndAccounts: jest
+      .fn()
+      .mockReturnValue([transactionAccountDepositMock])
   };
   const makeException = makeExceptionMock;
   const sut = new GetStatementAccountUsecases(
     makeAccountRepository,
     transactionAccountRepository,
-    makeException,
+    makeException
   );
   return { sut, makeAccountRepository, makeException };
 };
@@ -48,12 +50,17 @@ describe('app :: usecases :: transaction :: GetStatementAccountUsecases', () => 
 
     const response = await sut.execute(1);
 
-    expect(response).toEqual({
-      balance: 20,
-      id: 1,
-      message: 'John Doe you have R$20 in your account',
-      name: 'John Doe',
-    });
+    expect(response).toEqual([
+      {
+        account_transaction_id: 1,
+        created_at: '2022-02-02T03:00:00.000Z',
+        message: 'You made DEPOSIT and ADD R$20 in your account in 2-2-2022',
+        role: 'ADD',
+        transaction_id: 1,
+        type: 'DEPOSIT',
+        value: 20
+      }
+    ]);
   });
   it('should throw if account not found', async () => {
     const { sut, makeAccountRepository, makeException } = makeSut();
@@ -65,7 +72,7 @@ describe('app :: usecases :: transaction :: GetStatementAccountUsecases', () => 
       await sut.execute(1);
     } catch (error) {
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
       expect(error).toBeInstanceOf(Error);
     }

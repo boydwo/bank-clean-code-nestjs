@@ -11,6 +11,7 @@ import {
   makeExceptionMock,
   makeLoggerMock
 } from 'test/unit/mocks/factory.mock';
+import { transactionAccountDepositMock } from 'test/unit/mocks/transaction.mock';
 
 interface SutTypes {
   sut: MakeWithdrawalAccountUsecases;
@@ -28,7 +29,7 @@ const makeSut = (): SutTypes => {
     deleteById: jest.fn(),
     findById: jest.fn().mockReturnValue({ id: 1, ...accountMock }),
     update: jest.fn(),
-    findByDocument: jest.fn().mockReturnValue(null),
+    findByDocument: jest.fn().mockReturnValue(null)
   };
 
   const makeTransactionRepository: ITransactionRepository = {
@@ -36,15 +37,17 @@ const makeSut = (): SutTypes => {
       id: 1,
       type: typeTransactionsEnum.DEPOSIT,
       value: 20,
-      created_at: new Date(2022, 5, 27),
+      created_at: new Date(2022, 5, 27)
     }),
-    findById: jest.fn(),
+    findById: jest.fn()
   };
 
   const makeTransactionAccountRepository: ITransactionAccountRepository = {
     create: jest.fn().mockReturnValue(accountMock),
     findAll: jest.fn(),
-    findAllByAccountId: jest.fn(),
+    findAllByAccountIdWithTransactionAndAccounts: jest
+      .fn()
+      .mockReturnValue(transactionAccountDepositMock)
   };
 
   const makeException = makeExceptionMock;
@@ -55,7 +58,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   );
   return {
     sut,
@@ -63,7 +66,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   };
 };
 describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () => {
@@ -81,7 +84,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
 
     expect(makeTransactionRepository.create).toHaveBeenCalledWith(
       typeTransactionsEnum.WITHDRAWAL,
-      20,
+      20
     );
   });
   it('should call TransactionAccountRepository with correct values', async () => {
@@ -95,7 +98,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
       roleTransactionsEnum.SUBTRACT,
       20,
       20,
-      0,
+      0
     );
   });
   it('should call AccountRepository to update balance account with correct values', async () => {
@@ -104,7 +107,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
     await sut.execute(1, 20);
 
     expect(makeAccountRepository.update).toHaveBeenCalledWith(1, {
-      balance: 0,
+      balance: 0
     });
   });
   it('should call Logger with correct values', async () => {
@@ -114,7 +117,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
 
     expect(makeLogger.info).toHaveBeenCalledWith(
       'MakeWithdrawalAccountUsecases.execute',
-      'Account id:1 made a withdrawal of R$20',
+      'Account id:1 made a withdrawal of R$20'
     );
   });
   it('should return statement with correct values', async () => {
@@ -129,7 +132,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
       type: typeTransactionsEnum.WITHDRAWAL,
       before_balance: 20,
       after_balance: 0,
-      transaction_id: 1,
+      transaction_id: 1
     });
   });
 
@@ -143,7 +146,7 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
       await sut.execute(1, 20);
     } catch (error) {
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
       expect(error).toBeInstanceOf(Error);
     }
@@ -153,14 +156,14 @@ describe('app :: usecases :: transaction :: MakeWithdrawalAccountUsecases', () =
     jest
       .spyOn(makeAccountRepository, 'findById')
       .mockReturnValueOnce(
-        Promise.resolve({ ...accountMock, balance: 0, id: 1 }),
+        Promise.resolve({ ...accountMock, balance: 0, id: 1 })
       );
 
     try {
       await sut.execute(1, 20);
     } catch (error) {
       expect(makeException.badRequest).toHaveBeenCalledWith({
-        message: 'Your balance is insufficient!',
+        message: 'Your balance is insufficient!'
       });
       expect(error).toBeInstanceOf(Error);
     }

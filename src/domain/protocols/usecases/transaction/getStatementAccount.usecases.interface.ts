@@ -7,6 +7,7 @@ export type GetStatementResponse = {
   sender_account_id?: number;
   value: number;
   created_at: string;
+  message: string;
 };
 
 export interface IGetStatementAccountUsecases {

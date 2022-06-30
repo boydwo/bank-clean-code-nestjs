@@ -17,13 +17,13 @@ const makeSut = (): SutTypes => {
     deleteById: jest.fn(),
     findById: jest.fn().mockReturnValue({ ...accountMock, id: 1 }),
     update: jest.fn(),
-    findByDocument: jest.fn().mockReturnValue(null),
+    findByDocument: jest.fn().mockReturnValue(null)
   };
 
   const makeException = makeExceptionMock;
   const sut = new GetBalanceAccountUsecases(
     makeAccountRepository,
-    makeException,
+    makeException
   );
   return { sut, makeAccountRepository, makeException };
 };
@@ -44,7 +44,7 @@ describe('app :: usecases :: transaction :: GetBalanceAccountUsecases', () => {
       balance: 20,
       id: 1,
       message: 'John Doe you have R$20 in your account',
-      name: 'John Doe',
+      name: 'John Doe'
     });
   });
   it('should throw if account not found', async () => {
@@ -57,7 +57,7 @@ describe('app :: usecases :: transaction :: GetBalanceAccountUsecases', () => {
       await sut.execute(1);
     } catch (error) {
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
       expect(error).toBeInstanceOf(Error);
     }

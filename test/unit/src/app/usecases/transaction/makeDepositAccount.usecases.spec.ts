@@ -11,6 +11,7 @@ import {
   makeExceptionMock,
   makeLoggerMock
 } from 'test/unit/mocks/factory.mock';
+import { transactionAccountDepositMock } from 'test/unit/mocks/transaction.mock';
 
 interface SutTypes {
   sut: MakeDepositAccountUsecases;
@@ -28,7 +29,7 @@ const makeSut = (): SutTypes => {
     deleteById: jest.fn(),
     findById: jest.fn().mockReturnValue({ id: 1, ...accountMock }),
     update: jest.fn(),
-    findByDocument: jest.fn().mockReturnValue(null),
+    findByDocument: jest.fn().mockReturnValue(null)
   };
 
   const makeTransactionRepository: ITransactionRepository = {
@@ -36,15 +37,17 @@ const makeSut = (): SutTypes => {
       id: 1,
       type: typeTransactionsEnum.DEPOSIT,
       value: 20,
-      created_at: new Date(2022, 5, 27),
+      created_at: new Date(2022, 5, 27)
     }),
-    findById: jest.fn(),
+    findById: jest.fn()
   };
 
   const makeTransactionAccountRepository: ITransactionAccountRepository = {
     create: jest.fn().mockReturnValue(accountMock),
     findAll: jest.fn(),
-    findAllByAccountId: jest.fn(),
+    findAllByAccountIdWithTransactionAndAccounts: jest
+      .fn()
+      .mockReturnValue(transactionAccountDepositMock)
   };
 
   const makeException = makeExceptionMock;
@@ -55,7 +58,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   );
   return {
     sut,
@@ -63,7 +66,7 @@ const makeSut = (): SutTypes => {
     makeTransactionRepository,
     makeTransactionAccountRepository,
     makeException,
-    makeLogger,
+    makeLogger
   };
 };
 describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
@@ -81,7 +84,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
 
     expect(makeTransactionRepository.create).toHaveBeenCalledWith(
       typeTransactionsEnum.DEPOSIT,
-      20,
+      20
     );
   });
   it('should call TransactionAccountRepository with correct values', async () => {
@@ -95,7 +98,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       roleTransactionsEnum.ADD,
       20,
       20,
-      40,
+      40
     );
   });
   it('should call AccountRepository to update balance account with correct values', async () => {
@@ -104,7 +107,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
     await sut.execute(1, 20);
 
     expect(makeAccountRepository.update).toHaveBeenCalledWith(1, {
-      balance: 40,
+      balance: 40
     });
   });
   it('should call Logger with correct values', async () => {
@@ -114,7 +117,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
 
     expect(makeLogger.info).toHaveBeenCalledWith(
       'MakeAccountDepositUsecases.execute',
-      'Account id:1 received a deposit of R$20',
+      'Account id:1 received a deposit of R$20'
     );
   });
   it('should return statement with correct values', async () => {
@@ -129,7 +132,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       type: typeTransactionsEnum.DEPOSIT,
       before_balance: 20,
       after_balance: 40,
-      transaction_id: 1,
+      transaction_id: 1
     });
   });
 
@@ -143,7 +146,7 @@ describe('app :: usecases :: transaction :: MakeDepositAccountUsecases', () => {
       await sut.execute(1, 20);
     } catch (error) {
       expect(makeException.notFound).toHaveBeenCalledWith({
-        message: 'Account not found!',
+        message: 'Account not found!'
       });
       expect(error).toBeInstanceOf(Error);
     }
