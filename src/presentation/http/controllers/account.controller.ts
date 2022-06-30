@@ -18,6 +18,7 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { ICreateAccountUsecases } from 'src/domain/protocols/usecases/account/createAccount.usecases.interface';
+import { IDeleteAccountUsecases } from 'src/domain/protocols/usecases/account/deleteAccount.usecases.interface';
 import { IShowAccountUsecases } from 'src/domain/protocols/usecases/account/showAccount.usecases.interface';
 import { IUpdateAccountUsecases } from 'src/domain/protocols/usecases/account/updateAccount.usecases.interface';
 import {
@@ -35,7 +36,9 @@ export class AccountController {
     @Inject('ShowAccountUseCases')
     private readonly showAccountUsecases: IShowAccountUsecases,
     @Inject('UpdateAccountUseCases')
-    private readonly UpdateAccountUsecases: IUpdateAccountUsecases
+    private readonly updateAccountUsecases: IUpdateAccountUsecases,
+    @Inject('DeleteAccountUseCases')
+    private readonly deleteAccountUsecases: IDeleteAccountUsecases
   ) {}
 
   @Post('/')
@@ -90,7 +93,7 @@ export class AccountController {
     @Param('id', ParseIntPipe) id: number,
     @Body() { name, email, telephone, address }: UpdateAccountDto
   ): Promise<AccountResponseDto> {
-    const account = await this.UpdateAccountUsecases.execute(id, {
+    const account = await this.updateAccountUsecases.execute(id, {
       name,
       email,
       telephone,
@@ -107,7 +110,7 @@ export class AccountController {
     description: 'Account not found!'
   })
   async deleteAccount(@Param('id', ParseIntPipe) id: number) {
-    await this.UpdateAccountUsecases.execute(id, {});
+    await this.deleteAccountUsecases.execute(id);
     return {
       message: 'Account deleted'
     };
