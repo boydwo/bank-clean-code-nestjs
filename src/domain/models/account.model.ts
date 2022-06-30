@@ -1,7 +1,7 @@
 import { TransactionAccountsModel } from './transactionAccounts.model';
 
 export type AccountModel = {
-  id?: number;
+  id: number;
   name: string;
   email: string;
   document: string;
