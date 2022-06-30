@@ -1,4 +1,5 @@
 import { GetStatementAccountUsecases } from 'src/app/usecases/transaction/getStatementAccount.usecases';
+import { roleTransactionsEnum } from 'src/domain/enum/roleTransactions.enum';
 import { IException } from 'src/domain/protocols/exceptions/exceptions.interface';
 import { IAccountRepository } from 'src/domain/protocols/repositories/account.repository.interface';
 import { ITransactionAccountRepository } from 'src/domain/protocols/repositories/transactionAccount.repository.interface';
@@ -25,9 +26,13 @@ const makeSut = (): SutTypes => {
   const transactionAccountRepository: ITransactionAccountRepository = {
     create: jest.fn(),
     findAll: jest.fn(),
-    findAllByAccountIdWithTransactionAndAccounts: jest
-      .fn()
-      .mockReturnValue([transactionAccountDepositMock])
+    findAllByAccountIdWithTransactionAndAccounts: jest.fn().mockReturnValue([
+      transactionAccountDepositMock,
+      {
+        ...transactionAccountDepositMock,
+        role: roleTransactionsEnum.SUBTRACT
+      }
+    ])
   };
   const makeException = makeExceptionMock;
   const sut = new GetStatementAccountUsecases(
@@ -54,10 +59,23 @@ describe('app :: usecases :: transaction :: GetStatementAccountUsecases', () => 
       {
         account_transaction_id: 1,
         created_at: '2022-02-02T03:00:00.000Z',
-        message: 'You made DEPOSIT and ADD R$20 in your account in 2-2-2022',
+        message:
+          'You made TRANSFER and ADD R$20 in your account in 2-2-2022 from John Doe 2',
         role: 'ADD',
+        sender_account_id: 2,
         transaction_id: 1,
-        type: 'DEPOSIT',
+        type: 'TRANSFER',
+        value: 20
+      },
+      {
+        account_transaction_id: 1,
+        created_at: '2022-02-02T03:00:00.000Z',
+        message:
+          'You made TRANSFER and SUBTRACT R$20 in your account in 2-2-2022 to John Doe 2',
+        receiver_account_id: 2,
+        role: 'SUBTRACT',
+        transaction_id: 1,
+        type: 'TRANSFER',
         value: 20
       }
     ]);

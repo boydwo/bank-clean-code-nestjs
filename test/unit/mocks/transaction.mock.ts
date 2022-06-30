@@ -13,11 +13,30 @@ export const transactionAccountDepositMock: TransactionAccountsModel = {
   transaction: {
     id: 1,
     createdAt: new Date(2022, 1, 2).toISOString(),
-    type: typeTransactionsEnum.DEPOSIT,
+    type: typeTransactionsEnum.TRANSFER,
     value: 20,
     transaction_accounts: [
       {
         account_id: 1,
+        transaction_id: 1,
+        value: 20,
+        role: roleTransactionsEnum.ADD,
+        id: 1,
+        before_balance: 0,
+        after_balance: 20,
+        account: {
+          id: 1,
+          name: 'John Doe 1',
+          email: 'johnDoe',
+          document: '9999999999',
+          telephone: '55319999999',
+          address:
+            'Av das Palmeiras, 444, Bandeiranantes, 32415788, São Paulo, SP',
+          balance: 20
+        }
+      },
+      {
+        account_id: 2,
         transaction_id: 1,
         value: 20,
         role: roleTransactionsEnum.ADD,
@@ -39,7 +58,7 @@ export const transactionAccountDepositMock: TransactionAccountsModel = {
   },
   account: {
     id: 1,
-    name: 'John',
+    name: 'John Doe 1',
     email: 'johnDoe',
     document: '9999999999',
     telephone: '55319999999',
