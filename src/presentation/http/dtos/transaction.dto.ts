@@ -1,13 +1,42 @@
+import { IsNotEmpty, IsNumber } from 'class-validator';
+
 export class makeDepositAccountDto {
-  readonly account_id: number;
-  readonly value: number;
+  @IsNumber()
+  @IsNotEmpty()
+  account_id: number;
+  @IsNumber()
+  @IsNotEmpty()
+  value: number;
 }
 export class makeWithdrawalAccountDto {
-  readonly account_id: number;
-  readonly value: number;
+  @IsNumber()
+  @IsNotEmpty()
+  account_id: number;
+  @IsNumber()
+  @IsNotEmpty()
+  value: number;
 }
 export class transferBetweenAccountsDto {
-  readonly sender_account_id: number;
-  readonly receiver_account_id: number;
-  readonly value: number;
+  @IsNumber()
+  @IsNotEmpty()
+  sender_account_id: number;
+  @IsNumber()
+  @IsNotEmpty()
+  receiver_account_id: number;
+  @IsNumber()
+  @IsNotEmpty()
+  value: number;
+}
+
+export class StatementResponseDto {
+  account_id?: number;
+  value: number;
+  role: string;
+  type: string;
+  before_balance?: number;
+  after_balance?: number;
+  transaction_id: number;
+  receiver_account_id?: number;
+  created_at?: string;
+  message?: string;
 }
