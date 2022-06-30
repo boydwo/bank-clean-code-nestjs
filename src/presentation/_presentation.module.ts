@@ -48,12 +48,13 @@ import { TransactionController } from './http/controllers/transaction.controller
       ) => new UpdateAccountUseCases(accountRepository, exception, logger)
     },
     {
-      inject: [AccountRepository, LoggerService],
+      inject: [AccountRepository, LoggerService, ExceptionsService],
       provide: 'DeleteAccountUseCases',
       useFactory: (
         accountRepository: AccountRepository,
-        logger: LoggerService
-      ) => new DeleteAccountUseCases(accountRepository, logger)
+        logger: LoggerService,
+        exception: ExceptionsService
+      ) => new DeleteAccountUseCases(accountRepository, logger, exception)
     },
     {
       inject: [
