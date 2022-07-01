@@ -23,6 +23,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await app.close();
+  await prismaService.$disconnect();
 });
 
 beforeEach(async () => {
@@ -32,7 +33,9 @@ beforeEach(async () => {
 });
 
 afterEach(async () => {
-  await prismaService.$disconnect();
+  await prismaService.transaction_accounts.deleteMany();
+  await prismaService.transaction.deleteMany();
+  await prismaService.account.deleteMany();
 });
 
 const mockAccount = {
