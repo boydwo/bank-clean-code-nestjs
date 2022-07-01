@@ -27,7 +27,7 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^8.4.7",
@@ -45,7 +45,7 @@
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",
     "@nestjs/schematics": "^7.3.0",
-    "@nestjs/testing": "^7.6.15",
+    "@nestjs/testing": "^8.4.7",
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.36",
@@ -82,14 +82,23 @@
     "collectCoverageFrom": [
       "src/**/*.(t|j)s",
       "!src/**/*.module.ts",
-      "!src/main.ts"
+      "!src/main.ts",
+      "!src/infra/database/**/*.ts"
     ],
     "testPathIgnorePatterns": [
       "node_modules/"
     ],
     "coverageDirectory": "./coverage",
     "coverageProvider": "babel",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "coverageThreshold": {
+      "global": {
+          "branches": 100,
+          "functions": 100,
+          "lines": 100,
+          "statements": 100
+      }
+    }
   },
   "prisma": {
     "schema": "src/infra/database/prisma/schema.prisma"

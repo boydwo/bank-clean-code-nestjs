@@ -15,4 +15,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "npm", "run","prisma:migrate:init" ]
+CMD [ "npm", "run","start:dev" ]
