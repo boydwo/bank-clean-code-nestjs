@@ -3,7 +3,7 @@ import { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing/test';
 import { PrismaServiceClient } from 'src/infra/database/prisma/prisma.service.client';
 import * as request from 'supertest';
-import { AppModule } from '../../../src/app.module';
+import { AppModule } from '../../src/app.module';
 
 let app: INestApplication;
 let testingModule: TestingModule;
@@ -22,8 +22,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await app.close();
   await prismaService.$disconnect();
+  await app.close();
 });
 
 beforeEach(async () => {

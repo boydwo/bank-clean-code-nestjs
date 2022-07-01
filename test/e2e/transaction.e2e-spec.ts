@@ -3,7 +3,7 @@ import { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing/test';
 import { PrismaServiceClient } from 'src/infra/database/prisma/prisma.service.client';
 import * as request from 'supertest';
-import { AppModule } from '../../../src/app.module';
+import { AppModule } from '../../src/app.module';
 
 let app: INestApplication;
 let testingModule: TestingModule;
@@ -22,8 +22,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await app.close();
   await prismaService.$disconnect();
+  await app.close();
 });
 
 beforeEach(async () => {
@@ -47,21 +47,20 @@ const mockAccount = {
 };
 describe('[e2e] TransactionController', () => {
   it('(POST) transaction/deposit/ - make Deposit Account', async () => {
-    const createAccountResponse = await request(app.getHttpServer())
-      .post('/account')
-      .send(mockAccount);
-
+    const createAccountResponse = await prismaService.account.create({
+      data: mockAccount
+    });
     const depositResponse = await request(app.getHttpServer())
       .post('/transaction/deposit')
       .send({
-        account_id: createAccountResponse.body.id,
+        account_id: createAccountResponse.id,
         value: 20
       });
 
     expect(depositResponse.status).toBe(200);
     expect(depositResponse.body).toEqual(
       expect.objectContaining({
-        account_id: createAccountResponse.body.id,
+        account_id: createAccountResponse.id,
         after_balance: 20,
         before_balance: 0,
         role: 'ADD',
@@ -124,6 +123,9 @@ describe('[e2e] TransactionController', () => {
       account_id,
       value: 20
     });
+
+    await prismaService.account.findMany();
+
     const withdrawalResponse = await request(app.getHttpServer())
       .post('/transaction/withdrawal')
       .send({
