@@ -27,7 +27,6 @@ export class TransactionAccountPrismaDatabaseAdapter
     return transactions;
   }
   async findAllWithArgs({ account_id }) {
-    console.log('dsadsa', account_id);
     const transactions = await this.prismaClient.transaction_accounts.findMany({
       where: {
         account_id
