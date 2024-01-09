@@ -18,13 +18,13 @@ Make sure to have docker installed, otherwise [install it here](https://docs.doc
 1. Clone the project
 
 ```
-git clone https://github.com/boydwo/ripio-bank-nestjs.git
+git clone https://github.com/boydwo/bank-clean-code-nestjs.git
 ```
 
 2. Fetch dependencies
 
 ```
-cd ripio-bank-nestjs && npm install
+npm install
 ```
 
 3. Copy the `.env.example` file over to your own `.env` file.
